@@ -1,6 +1,6 @@
 const Preferences = require('preferences');
-const namesByUsername = new Preferences('generate-release-notes.names-by-username', {}, {encrypt: false, format: 'json'});
-const usernamesByEmail = new Preferences('generate-release-notes.usernames-by-email', {}, {encrypt: false, format: 'json'});
+const namesByUsername = new Preferences('org.opendatakit.odk-release-notes.names-by-username', {}, {encrypt: false, format: 'json'});
+const usernamesByEmail = new Preferences('org.opendatakit.odk-release-notes.usernames-by-email', {}, {encrypt: false, format: 'json'});
 
 module.exports = {
   usernameByEmail(email, name) {
