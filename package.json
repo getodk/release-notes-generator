@@ -1,0 +1,22 @@
+{
+  "name": "generate-release-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/generate.js",
+  "scripts": {
+    "generate": "node src/generate.js"
+  },
+  "bin": {
+    "generate-release-notes": "src/generate.js"
+  },
+  "author": "",
+  "preferGlobal": true,
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^1.29.0",
+    "debug": "^4.0.1",
+    "ejs": "latest",
+    "git-release-notes": "^3.0.0",
+    "preferences": "^1.0.2"
+  }
+}
