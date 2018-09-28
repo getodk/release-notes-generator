@@ -14,7 +14,7 @@ const getCommits = require("./util").getCommits;
 const parsePR = require("./util").parsePR;
 const parseUsername = require("./util").parseUsername;
 
-const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit);
+const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit.title);
 const mergeCommitMapper = commit => {
   const username = parseUsername(commit.title);
   const pr = parsePR(commit.title);
