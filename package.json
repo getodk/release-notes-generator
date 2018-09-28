@@ -1,20 +1,25 @@
 {
-  "name": "generate-release-notes",
-  "version": "1.0.0",
-  "description": "",
+  "name": "odk-release-notes",
+  "version": "0.1.1",
+  "description": "Tool that generates the release note items between two git tags for ODK projects",
   "main": "src/generate.js",
-  "scripts": {
-    "generate": "node src/generate.js"
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ggalmazor/odk-release-notes.git"
   },
-  "bin": {
-    "generate-release-notes": "src/generate.js"
-  },
-  "author": "",
+  "author": "ggalmazor@gmail.com",
+  "license": "Apache 2.0",
   "preferGlobal": true,
-  "license": "ISC",
+  "bin": {
+    "odk-release-notes": "src/generate.js"
+  },
+  "bugs": {
+    "url": "https://github.com/ggalmazor/odk-release-notes/issues"
+  },
+  "homepage": "https://github.com/ggalmazor/odk-release-notes",
   "dependencies": {
     "date-fns": "^1.29.0",
-    "debug": "^4.0.1",
     "ejs": "latest",
     "git-release-notes": "^3.0.0",
     "preferences": "^1.0.2"
