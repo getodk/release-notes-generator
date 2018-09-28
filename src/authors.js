@@ -4,7 +4,7 @@ const usernamesByEmail = new Preferences('generate-release-notes.usernames-by-em
 
 module.exports = {
   usernameByEmail(email, name) {
-    const beforeAt = email.substring(0, email.indexOf('@'));
+    const beforeAt = email.substring(email.indexOf('+')+1, email.indexOf('@'));
     if (email.endsWith("users.noreply.github.com")) {
       usernamesByEmail[email] = beforeAt;
       namesByUsername[beforeAt] = name;
