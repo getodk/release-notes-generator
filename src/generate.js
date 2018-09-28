@@ -14,6 +14,7 @@ const getCommits = require("./util").getCommits;
 const parsePR = require("./util").parsePR;
 const parseUsername = require("./util").parseUsername;
 
+const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit);
 const mergeCommitMapper = commit => {
   const username = parseUsername(commit.title);
   const pr = parsePR(commit.title);
@@ -45,6 +46,7 @@ const zipEverything = ([mergeCommits, squashMerges, mergeCommitTpl, squashMergeT
 Promise
     .all([
       getCommits(process.argv[2], `${process.argv[3]}..${process.argv[4]}`, true)
+          .then(filter(mergeCommitFilter))
           .then(map(mergeCommitMapper)),
       getCommits(process.argv[2], `${process.argv[3]}..${process.argv[4]}`, false)
           .then(filter(squashMergeFilter))
