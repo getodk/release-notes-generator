@@ -1,62 +1,28 @@
 #!/usr/bin/env node
 
 const ejs = require('ejs');
+const git = require("./git");
+const tpls = require("./tpls");
+const comparingBy = require("./objs").comparingBy;
 
-const authors = require('./authors');
+const run = async (range, cwd) => {
+  const mergeCommits = await git.getMergeCommits(range, cwd);
+  const mergeCommitTpl = await tpls.read('merge-commits');
 
-const join = require("./util").join;
-const sort = require("./util").sort;
-const parseDate = require("./util").parseDate;
-const filter = require("./util").filter;
-const readTpl = require("./util").readTpl;
-const map = require("./util").map;
-const getCommits = require("./util").getCommits;
-const parsePR = require("./util").parsePR;
-const parseUsername = require("./util").parseUsername;
+  const squashMerges = await git.getSquashMerges(range, cwd);
+  const squashMergeTpl = await tpls.read('squash-merges');
 
-const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit.title);
-const mergeCommitMapper = commit => {
-  const username = parseUsername(commit.title);
-  const pr = parsePR(commit.title);
-  commit['ts'] = parseDate(commit.committerDate);
-  commit['authorUsername'] = username;
-  commit['realAuthorName'] = authors.nameByUsername(username);
-  commit['pr'] = pr;
-  return commit;
+  // Pair commits up with their corresponding tpl
+  const pairs = [];
+  mergeCommits.forEach(commit => pairs.push([commit, mergeCommitTpl]));
+  squashMerges.forEach(commit => pairs.push([commit, squashMergeTpl]));
+
+  const output = pairs
+      .sort(comparingBy(([commit]) => commit.ts.toMillis())) // Sort commits by commit date
+      .map(([commit, tpl]) => ejs.render(tpl, {commits: [commit]})) // Render each commit individually
+      .join("\n"); // Join all into the output text
+
+  console.log(output);
 };
 
-const squashMergeFilter = commit => commit.committerName !== 'GitHub' && commit.committerName !== commit.authorName;
-const squashMergeMapper = commit => {
-  commit['ts'] = parseDate(commit.committerDate);
-  commit['authorUsername'] = authors.usernameByEmail(commit.authorEmail, commit.authorName);
-  return commit;
-};
-
-const zipEverything = ([mergeCommits, squashMerges, mergeCommitTpl, squashMergeTpl]) => {
-  tuples = [];
-  mergeCommits.forEach(commit => {
-    tuples.push([commit.ts, commit, mergeCommitTpl]);
-  });
-  squashMerges.forEach(commit => {
-    tuples.push([commit.ts, commit, squashMergeTpl]);
-  });
-  return tuples;
-};
-
-Promise
-    .all([
-      getCommits(process.argv[2], `${process.argv[3]}..${process.argv[4]}`, true)
-          .then(filter(mergeCommitFilter))
-          .then(map(mergeCommitMapper)),
-      getCommits(process.argv[2], `${process.argv[3]}..${process.argv[4]}`, false)
-          .then(filter(squashMergeFilter))
-          .then(map(squashMergeMapper)),
-      readTpl('merge-commits'),
-      readTpl('squash-merges')
-    ])
-    .then(zipEverything)
-    .then(sort((a, b) => a[0] < b[1] ? -1 : a[0] > b[0] ? 1 : 0))
-    .then(map(tuple => ejs.render(tuple[2], {commits: [tuple[1]]})))
-    .then(join("\n"))
-    .then(output => console.log(output))
-    .catch(e => console.error(e));
+run(`${process.argv[3]}..${process.argv[4]}`, process.argv[2]).catch(error => console.error(error));
