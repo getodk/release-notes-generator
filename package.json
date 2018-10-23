@@ -1,6 +1,6 @@
 {
   "name": "release-notes-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tool that generates the release note items between two git tags for ODK projects",
   "main": "src/generate.js",
   "scripts": {},
