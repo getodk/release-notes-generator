@@ -9,10 +9,29 @@ class Option {
     return None.NONE;
   }
 
+  static race(...options) {
+    for (let option of options)
+      if (option.isPresent())
+        return option;
+    return None.NONE;
+  }
+
+  get() {
+  }
+
   orElse(value) {
   }
 
+  orElseGet(valueSupplier) {
+  }
+
+  orUndefined() {
+  }
+
   map(mapper) {
+  }
+
+  isPresent() {
   }
 
   isEmpty() {
@@ -20,12 +39,28 @@ class Option {
 }
 
 class None extends Option {
+  get() {
+    throw new Error("Value not present");
+  }
+
   orElse(value) {
     return value;
   }
 
+  orElseGet(valueSupplier) {
+    return valueSupplier();
+  }
+
+  orUndefined() {
+    return undefined;
+  }
+
   map(mapper) {
     return this;
+  }
+
+  isPresent() {
+    return false;
   }
 
   isEmpty() {
@@ -41,12 +76,28 @@ class Some extends Option {
     this.value = value;
   }
 
+  get() {
+    return this.value;
+  }
+
   orElse(value) {
+    return this.value;
+  }
+
+  orElseGet(valueSupplier) {
+    return this.value;
+  }
+
+  orUndefined() {
     return this.value;
   }
 
   map(mapper) {
     return Option.of(mapper(this.value));
+  }
+
+  isPresent() {
+    return true;
   }
 
   isEmpty() {

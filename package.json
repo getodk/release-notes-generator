@@ -1,6 +1,6 @@
 {
   "name": "release-notes-generator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tool that generates the release note items between two git tags for ODK projects",
   "main": "src/generate.js",
   "scripts": {},
@@ -12,7 +12,7 @@
   "license": "Apache 2.0",
   "preferGlobal": true,
   "bin": {
-    "release-notes-generator": "src/generate.js"
+    "release-notes-generator": "src/main.js"
   },
   "bugs": {
     "url": "https://github.com/opendatakit/release-notes-generator/issues"
@@ -22,6 +22,7 @@
     "ejs": "latest",
     "luxon": "^1.4.3",
     "preferences": "^1.0.2",
+    "sha1": "^1.1.1",
     "uuid": "^3.3.2"
   }
 }
