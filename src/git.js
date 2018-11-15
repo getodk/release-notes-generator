@@ -66,6 +66,7 @@ const parsePR = parse(/Merge pull request #(\d+)/);
 
 const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit.title);
 const mergeCommitMapper = commit => {
+  authors.feedCommit(commit);
   const username = parseUsername(commit.title);
   const pr = parsePR(commit.title);
   commit['ts'] = DateTime.fromISO(commit.committerDate);
@@ -77,6 +78,7 @@ const mergeCommitMapper = commit => {
 
 const squashMergeFilter = commit => commit.committerName !== 'GitHub' && commit.committerName !== commit.authorName;
 const squashMergeMapper = commit => {
+  authors.feedCommit(commit);
   commit['ts'] = DateTime.fromISO(commit.committerDate);
   commit['authorUsername'] = authors.usernameByEmail(commit.authorEmail, commit.authorName);
   return commit;
