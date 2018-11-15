@@ -16,10 +16,30 @@ Instructions:
 
 ## Usage instructions
 
-Run this tool with `release-notes-generator <path> <version1> <version2>`. Arguments:
+Run this tool with `release-notes-generator generate <path> <version1> <version2>`. Arguments:
 - `<path>`: Path to the GIT repo you want to generate a release notes for
 - `<version1>`, and `<version2>`: Versions that define the range of commits your release notes will include
 
 Example: `release-notes-generator /home/guillermo/src/odk/briefcase v1.11.0 v1.12.0`
 
-  (This will generate a release notes for Briefcase between versions v1.11.0 and v1.12.0)  
+  (This will generate a release notes for Briefcase between versions v1.11.0 and v1.12.0)
+  
+## Advanced usage: preload authors table
+
+Use the following JSON file as a template to feed the authors to the tool:
+
+```json
+[
+  {
+    "name": "Jane Doe",
+    "email": "jane@doe.com",
+    "username": "the-jane-doe",
+    "organization": "Doe & Doe Corp."
+  }
+]
+
+```  
+
+You can feed a JSON with authors with the command `release-notes-generator feed-authors <path>`.
+
+You can check the current authors table (and use it as a template as well) with the command `release-notes-generator print-authors`
