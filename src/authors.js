@@ -63,7 +63,7 @@ const feedCommit = (commit, squash) => {
     return author;
 };
 
-const print = () => console.log(authors);
+const print = () => console.log(JSON.stringify(Object.values(authors), null, 2));
 
 exports.feedAuthors = feedAuthors;
 exports.feedCommit = feedCommit;
