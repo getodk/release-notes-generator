@@ -61,24 +61,21 @@ const log = async (range, cwd, mergesOnly) => {
   )).map(asEntry);
 };
 
-const parseUsername = parse(/ from (.+?)\//);
 const parsePR = parse(/Merge pull request #(\d+)/);
 
 const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit.title);
 const mergeCommitMapper = commit => {
-  const username = parseUsername(commit.title);
   const pr = parsePR(commit.title);
   commit['ts'] = DateTime.fromISO(commit.committerDate);
-  commit['authorUsername'] = username;
-  commit['realAuthorName'] = authors.nameByUsername(username);
+  commit['author'] = authors.feedCommit(commit, false);
   commit['pr'] = pr;
   return commit;
 };
 
-const squashMergeFilter = commit => commit.committerName !== 'GitHub' && commit.committerName !== commit.authorName;
+const squashMergeFilter = commit => commit.committerEmail !== commit.authorEmail;
 const squashMergeMapper = commit => {
   commit['ts'] = DateTime.fromISO(commit.committerDate);
-  commit['authorUsername'] = authors.usernameByEmail(commit.authorEmail, commit.authorName);
+  commit['author'] = authors.feedCommit(commit, true);
   return commit;
 };
 
