@@ -44,15 +44,9 @@ const buildMergeCommitAuthorJson = commit => ({
   username: parseUsername(commit.title)
 });
 
-const feedCommit = commit => {
-  if (commit.committerName === "GitHub") {
-    // This is a "merge commit" type. The author is the guy who merged the PR, not the real author
-    const incomingAuthor = Author.fromJson(buildMergeCommitAuthorJson(commit));
-    const author = searchAuthor(authors, incomingAuthor).orElse(Author.empty()).merge(incomingAuthor);
-    authors[author.uuid] = author;
-    return author;
-  } else {
-    // This is a "squash merge" or a "rebase and merge" type
+const feedCommit = (commit, squash) => {
+  if (squash) {
+    // This is a "squash merge" type
     // We can get info from two authors for the same price
     const incomingAuthor = Author.fromJson(buildSquashMergeAuthorJson("author", commit));
     const author = searchAuthor(authors, incomingAuthor).orElse(Author.empty()).merge(incomingAuthor);
@@ -62,6 +56,11 @@ const feedCommit = commit => {
     authors[committer.uuid] = committer;
     return author;
   }
+    // This is a "merge commit" type. The author is the guy who merged the PR, not the real author
+    const incomingAuthor = Author.fromJson(buildMergeCommitAuthorJson(commit));
+    const author = searchAuthor(authors, incomingAuthor).orElse(Author.empty()).merge(incomingAuthor);
+    authors[author.uuid] = author;
+    return author;
 };
 
 const print = () => console.log(authors);
