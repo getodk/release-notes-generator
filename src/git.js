@@ -4,6 +4,7 @@ const arrays = require('./arrays');
 const objs = require('./objs');
 const {map, filter} = require('./arrays');
 const authors = require('./authors');
+const Option = require('./option');
 
 const normalize = message => message
     .replace(/\r\n?|[\n\u2028\u2029]/g, "\n")
@@ -50,7 +51,7 @@ const parseLine = line => {
       : {entry: entrySeq, type: "message", message: line.trim()};
 };
 
-const parse = regexp => text => regexp.exec(text)[1];
+const parse = regexp => text => Option.of(regexp.exec(text)).map(matches => matches[1]);
 
 const log = async (range, cwd, mergesOnly) => {
   const {stdout} = await shell.exec(`git log --no-color ${mergesOnly ? "--merges" : "--no-merges"} --branches=master --format="${logFormat}" ${range}`, {cwd});
@@ -61,11 +62,13 @@ const log = async (range, cwd, mergesOnly) => {
   )).map(asEntry);
 };
 
-const parsePR = parse(/Merge pull request #(\d+)/);
+const parsePR = text => Option.race(
+  parse(/Merge pull request #(\d+)/)(text),
+  parse(/\(#(\d+)\)/)(text)
+);
 
-const mergeCommitFilter = commit => /Merge pull request #(\d+)/.test(commit.title);
 const mergeCommitMapper = commit => {
-  const pr = parsePR(commit.title);
+  const pr = parsePR(commit.title).orUndefined();
   commit['ts'] = DateTime.fromISO(commit.committerDate);
   commit['author'] = authors.feedCommit(commit, false);
   commit['pr'] = pr;
@@ -80,8 +83,7 @@ const squashMergeMapper = commit => {
 };
 
 exports.getMergeCommits = (range, cwd) => log(range, cwd, true)
-    .then(filter(mergeCommitFilter))
-    .then(map(mergeCommitMapper));
+  .then(map(mergeCommitMapper));
 
 exports.getSquashMerges = (range, cwd) => log(range, cwd, false)
     .then(filter(squashMergeFilter))
