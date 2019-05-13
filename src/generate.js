@@ -18,9 +18,9 @@ module.exports = async (range, cwd) => {
   squashMerges.forEach(commit => pairs.push([commit, squashMergeTpl]));
 
   const output = pairs
-      .sort(comparingBy(([commit]) => commit.ts.toMillis())) // Sort commits by commit date
-      .map(([commit, tpl]) => ejs.render(tpl, {commits: [commit]})) // Render each commit individually
-      .join("\n"); // Join all into the output text
+    .sort(comparingBy(([commit]) => commit.ts.toMillis())) // Sort commits by commit date
+    .map(([commit, tpl]) => ejs.render(tpl, {commits: [commit]})) // Render each commit individually
+    .join("\n"); // Join all into the output text
 
   console.log(output);
 };

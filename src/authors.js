@@ -18,8 +18,8 @@ const searchAuthor = (authors, {uuid, username, emailHash, email, name}) => {
   emailHash = Option.race(Option.of(emailHash), Option.of(email).map(sha1)).orUndefined();
   for (let author of valuesOf(authors)) {
     if ((author.username !== undefined && author.username === username) ||
-        (author.emailHash !== undefined && author.emailHash === emailHash) ||
-        (author.name !== undefined && author.name === name))
+      (author.emailHash !== undefined && author.emailHash === emailHash) ||
+      (author.name !== undefined && author.name === name))
       return Option.of(author).map(Author.fromJson);
   }
   return Option.empty();
@@ -29,9 +29,9 @@ const valuesOf = obj => Object.values(obj);
 
 const feedAuthors = json => {
   json
-      .map(Author.fromJson)
-      .map(incomingAuthor => searchAuthor(authors, incomingAuthor).orElse(Author.empty()).merge(incomingAuthor))
-      .forEach(author => authors[author.uuid] = author);
+    .map(Author.fromJson)
+    .map(incomingAuthor => searchAuthor(authors, incomingAuthor).orElse(Author.empty()).merge(incomingAuthor))
+    .forEach(author => authors[author.uuid] = author);
   console.log(authors);
 };
 
