@@ -25,11 +25,11 @@ class Author {
     if (!(other instanceof Author))
       throw new Error("Can't merge with something that's not an Author");
     return new Author(
-        this.uuid || other.uuid,
-        this.name || other.name,
-        this.emailHash || other.emailHash,
-        this.username || other.username,
-        this.organization || other.organization
+      this.uuid || other.uuid,
+      this.name || other.name,
+      this.emailHash || other.emailHash,
+      this.username || other.username,
+      this.organization || other.organization
     );
   }
 
