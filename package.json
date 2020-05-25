@@ -6,18 +6,18 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git@github.com:opendatakit/release-notes-generator.git"
+    "url": "git@github.com:getodk/release-notes-generator.git"
   },
-  "author": "ggalmazor@gmail.com",
+  "author": "team@getodk.org",
   "license": "Apache 2.0",
   "preferGlobal": true,
   "bin": {
     "release-notes-generator": "src/main.js"
   },
   "bugs": {
-    "url": "https://github.com/opendatakit/release-notes-generator/issues"
+    "url": "https://github.com/getodk/release-notes-generator/issues"
   },
-  "homepage": "https://github.com/ggalmazor/release-notes-generator",
+  "homepage": "https://github.com/getodk/release-notes-generator",
   "dependencies": {
     "ejs": "latest",
     "luxon": "^1.4.3",

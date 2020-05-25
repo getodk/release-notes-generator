@@ -2,7 +2,7 @@ const Preferences = require('preferences');
 const sha1 = require('sha1');
 const Author = require('./author');
 const Option = require('./option');
-const authors = new Preferences('org.opendatakit.release-notes-generator.authors', {}, {
+const authors = new Preferences('org.getodk.release-notes-generator.authors', {}, {
   encrypt: false,
   format: 'json'
 });
